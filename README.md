@@ -1,2 +1,10 @@
 # Springboard-JavaScript_and_APIs
 Springboard Software Engineering Career Track: JavaScript &amp; APIs
+
+---
+---
+| Subsection | Title                                        | Status             |
+| ---------- | -------------------------------------------- | ------------------ |
+| 2.1        | [AJAX Giphy Party](./02_1-AJAX_Giphy_Party/) | <b>In-Progress</b> |
+| 2.2        | [Rest & Json API](./02_2-Rest_and_JSON_API)  | <b>In-Progress</b> |
+| 3          | [GraphQL](./03-GraphQL)                      | <b>In-Progress</b> |
