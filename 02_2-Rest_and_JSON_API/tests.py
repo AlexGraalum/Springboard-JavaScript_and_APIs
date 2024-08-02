@@ -10,6 +10,7 @@ app.config['SQLALCHEMY_ECHO'] = False
 # Make Flask errors be real errors, rather than HTML pages with error info
 app.config['TESTING'] = True
 
+
 db.drop_all()
 db.create_all()
 
@@ -38,6 +39,7 @@ class CupcakeViewsTestCase(TestCase):
         Cupcake.query.delete()
 
         cupcake = Cupcake(**CUPCAKE_DATA)
+        
         db.session.add(cupcake)
         db.session.commit()
 
@@ -45,7 +47,6 @@ class CupcakeViewsTestCase(TestCase):
 
     def tearDown(self):
         """Clean up fouled transactions."""
-
         db.session.rollback()
 
     def test_list_cupcakes(self):
@@ -53,7 +54,6 @@ class CupcakeViewsTestCase(TestCase):
             resp = client.get("/api/cupcakes")
 
             self.assertEqual(resp.status_code, 200)
-
             data = resp.json
             self.assertEqual(data, {
                 "cupcakes": [

@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "secret-key"
 
-##ERROR MESSAGE FROM HERE
+app.app_context().push()
 connect_db(app)
 
 @app.route("/")
