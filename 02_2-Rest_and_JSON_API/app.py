@@ -4,11 +4,10 @@ from models import db, connect_db, Cupcake
 
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = "secret-key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = "secret-key"
 
-app.app_context().push()
 connect_db(app)
 
 @app.route("/")
@@ -23,17 +22,17 @@ def list_cupcakes():
 @app.route("/api/cupcakes", methods=["POST"])
 def create_cupcake():
     data = request.json
-    
+
     cupcake = Cupcake(
         flavor=data['flavor'],
         rating=data['rating'],
         size=data['size'],
         image=data['image'] or None
     )
-    
+
     db.session.add(cupcake)
     db.session.commit()
-    
+
     return (jsonify(cupcake=cupcake.to_dict()), 201)
 
 @app.route("/api/cupcakes/<int:cupcake_id>")
