@@ -17,12 +17,12 @@ def root():
 @app.route("/api/cupcakes")
 def list_cupcakes():
     cupcakes = [cupcake.to_dict() for cupcake in Cupcake.query.all()]
-    return jsonify(cupcakes=cupcakes)
+    return (jsonify(cupcakes=cupcakes), 200)
 
 @app.route("/api/cupcakes", methods=["POST"])
 def create_cupcake():
     data = request.json
-
+    
     cupcake = Cupcake(
         flavor=data['flavor'],
         rating=data['rating'],
