@@ -12,7 +12,7 @@ connect_db(app)
 
 @app.route("/")
 def root():
-    return render_template("index.html")
+    return render_template("./index.html")
 
 @app.route("/api/cupcakes")
 def list_cupcakes():
@@ -40,21 +40,21 @@ def get_cupcake(cupcake_id):
     cupcake = Cupcake.query.get_or_404(cupcake_id)
     return jsonify(cupcake=cupcake.to_dict())
 
-@app.route("/api/cupcakes/<int:cupcake_id>", methods=["PATCH"])
-def update_cupcake(cupcake_id):
-    data = request.json
-
-    cupcake = Cupcake.query.get_or_404(cupcake_id)
-
-    cupcake.flavor = data['flavor']
-    cupcake.rating = data['rating']
-    cupcake.size = data['size']
-    cupcake.image = data['image']
-
-    db.session.add(cupcake)
-    db.session.commit()
-
-    return jsonify(cupcake=cupcake.to_dict())
+#@app.route("/api/cupcakes/<int:cupcake_id>", methods=["PATCH"])
+#def update_cupcake(cupcake_id):
+#    data = request.json
+#
+#    cupcake = Cupcake.query.get_or_404(cupcake_id)
+#
+#    cupcake.flavor = data['flavor']
+#    cupcake.rating = data['rating']
+#    cupcake.size = data['size']
+#    cupcake.image = data['image']
+#
+#    db.session.add(cupcake)
+#    db.session.commit()
+#
+#    return jsonify(cupcake=cupcake.to_dict())
 
 @app.route("/api/cupcakes/<int:cupcake_id>", methods=["DELETE"])
 def remove_cupcake(cupcake_id):
