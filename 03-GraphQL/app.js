@@ -17,6 +17,10 @@ async function run() {
     await getTotalCharacters();
 
     console.log("\n\nCOMPLEX TASKS");
+    await getCharacterProfile();
+    await getCharacterHomeworlds();
+    await getVehiclePilots();
+    await getFilmEntities();
 }
 
 run();
@@ -124,7 +128,7 @@ async function getFirstFiveShips() {
     for (let character of respJson.data.allPeople.people) {
         console.log(character.name);
         for (let ship of character.starshipConnection.starships) {
-            console.log(`\t${ship.name}`);
+            console.log(`- ${ship.name}`);
         }
     }
 }
@@ -165,7 +169,7 @@ async function getPlanetClimates() {
     for (planet of respJson.data.allPlanets.planets) {
         console.log(planet.name);
         for (climate of planet.climates) {
-            console.log(`\t${climate}`);
+            console.log(`- ${climate}`);
         }
     }
 }
@@ -251,4 +255,157 @@ async function getTotalCharacters() {
         total += film.characterConnection.totalCount;
     }
     console.log(`Total character count: ${total}`);
+}
+
+async function getCharacterProfile() {
+    console.log("\nTask 12 -- Get The Full Profile of a Specific Character");
+
+    query = `
+        person(id: "cGVvcGxlOjEx") {
+            name
+            gender
+            birthYear
+            eyeColor
+            hairColor
+            homeworld {
+                name
+                population
+                climates
+            }
+            filmConnection {
+                films {
+                    title
+                }
+            }
+            starshipConnection {
+                starships {
+                    name
+                    model
+                }
+            }
+        }
+    `;
+
+    let respJson = await getData(query);
+    let character = respJson.data.person;
+    let log = '';
+
+    log += `[${character.name}]\n`;
+    log += `Gender: ${character.gender}\n`;
+    log += `Birthyear: ${character.birthYear}\n`;
+    log += `Eye Color: ${character.eyeColor}\n`;
+    log += `Hair Color: ${character.hairColor}\n`;
+    log += `Homeworld: ${character.homeworld.name}\n`;
+    log += `\tPopulation: ${character.homeworld.population}\n`;
+    log += `\tClimates:\n`;
+    for (climate of character.homeworld.climates)
+        log += `\t- ${climate}\n`;
+    log += `Films:\n`;
+    for (film of character.filmConnection.films)
+        log += `\t- ${film.title}\n`;
+    log += `Starships:\n`;
+    for (starship of character.starshipConnection.starships)
+        log += `\t- ${starship.name} -- ${starship.model}\n`;
+
+    console.log(log);
+}
+
+async function getCharacterHomeworlds() {
+    console.log("\nTask 13 -- Get The Name And Population of First 5 Characters Homeworlds");
+
+    query = `
+        allPeople(first: 5) {
+            people {
+                name
+                homeworld {
+                    name
+                    population
+                }
+            }
+        }
+    `;
+
+    let respJson = await getData(query);
+
+    for (let i = 0; i < respJson.data.allPeople.people.length; i++) {
+        let character = respJson.data.allPeople.people[i];
+        let log = `${character.name}\nHomeworld: ${character.homeworld.name}\nPopulation: ${character.homeworld.population}`;
+
+        if (i + 1 < respJson.data.allPeople.people.length - 1)
+            log += '\n';
+
+        console.log(log);
+    }
+}
+
+async function getVehiclePilots() {
+    console.log("\nTask 14 -- Get Name of First 3 Vehicles, And The Name And Species of The Pilots")
+
+    query = `
+        allVehicles(first: 3) {
+            vehicles {
+                name
+                pilotConnection {
+                    pilots {
+                        name
+                        species {
+                            name
+                        }
+                    }
+                }
+            }
+        }
+    `;
+
+    let respJson = await getData(query);
+
+    for (vehicle of respJson.data.allVehicles.vehicles) {
+        console.log(`${vehicle.name}`);
+        for (pilot of vehicle.pilotConnection.pilots)
+            console.log(`- ${pilot.name}, ${pilot.species.name}`);
+    }
+}
+
+async function getFilmEntities() {
+    console.log("\nTask 15 -- List All Characters, Planets, And Starships of First 3 Films");
+
+    query = `
+        allFilms(first: 3) {
+            films {
+                title
+                characterConnection {
+                    characters {
+                        name
+                    }
+                }
+                planetConnection {
+                    planets {
+                        name
+                    }
+                }
+                starshipConnection {
+                    starships {
+                        name
+                    }
+                }
+            }
+        }
+    `;
+
+    let respJson = await getData(query);
+    for (film of respJson.data.allFilms.films) {
+        console.log(`[${film.title}]`);
+
+        console.log("Characters");
+        for (character of film.characterConnection.characters)
+            console.log(`- ${character.name}`);
+
+        console.log("Planets");
+        for (planet of film.planetConnection.planets)
+            console.log(`- ${planet.name}`);
+
+        console.log("Starships");
+        for (starship of film.starshipConnection.starships)
+            console.log(`- ${starship.name}`);
+    }
 }
